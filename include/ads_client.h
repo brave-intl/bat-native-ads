@@ -30,6 +30,10 @@ class AdsClient {
  public:
   virtual ~AdsClient() = default;
 
+  virtual void LoadAdsState(CallbackHandler* handler) = 0;
+  virtual void SaveAdsState(const std::string& ads_state,
+      CallbackHandler* handler) = 0;
+
   virtual void SaveCampaignInfo(std::unique_ptr<catalog::CampaignInfo> info,
       CampaignInfoCallback callback) = 0;
   virtual void LoadCampaignInfo(catalog::CampaignInfoFilter filter,

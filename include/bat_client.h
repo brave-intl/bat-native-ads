@@ -8,6 +8,7 @@
 
 #include "../include/ads_impl.h"
 #include "../include/catalog.h"
+#include "../include/state_client.h"
 
 namespace bat_ads {
 class AdsImpl;
@@ -19,6 +20,8 @@ class BatClient {
  public:
   explicit BatClient(bat_ads::AdsImpl* ads);
   ~BatClient();
+
+  bool LoadState(const std::string& json);
 
   // Called whenever Brave Ads is enabled or disabled by
   // the user, or browser restart
@@ -33,7 +36,11 @@ class BatClient {
   void ApplyCatalog(const catalog::Catalog& catalog, bool bootP);
 
  private:
+  void SaveState();
+
   bat_ads::AdsImpl* ads_;  // NOT OWNED
+
+  std::unique_ptr<CLIENT_STATE_ST> state_;
 };
 
 }  // namespace ads_bat_client

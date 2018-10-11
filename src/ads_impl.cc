@@ -20,6 +20,10 @@ void AdsImpl::OnTimer(uint32_t timer_id) {
   // TODO(Terry Mancey): Download catalog
 }
 
+void AdsImpl::SaveAdsState(const std::string& json) {
+  ads_client_->SaveAdsState(json, this);
+}
+
 void AdsImpl::SetCampaignInfo(std::unique_ptr<catalog::CampaignInfo> info,
     ads::CampaignInfoCallback callback) {
   ads_client_->SaveCampaignInfo(std::move(info),
@@ -60,7 +64,6 @@ void AdsImpl::GenerateAdReportingEvent(const std::string& eventType,
 }
 
 void AdsImpl::Initialize() {
-  // TODO(Terry Mancey): Add user model state (#10)
   // TODO(Terry Mancey): Remove test paths
 
   bundle_path_ = "/Users/terrym/Desktop/bundle.json";

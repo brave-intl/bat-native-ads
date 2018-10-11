@@ -26,6 +26,8 @@ class AdsImpl : public ads::Ads, public ads::CallbackHandler {
   AdsImpl(const AdsImpl&) = delete;
   AdsImpl& operator=(const AdsImpl&) = delete;
 
+  void SaveAdsState(const std::string& json);
+
   void GenerateAdReportingEvent(const std::string& eventType,
       const std::map<std::string, std::string>& action) override;
   void Initialize() override;

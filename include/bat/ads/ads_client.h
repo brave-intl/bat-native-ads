@@ -13,12 +13,10 @@
 
 #include "bat/ads/ad_info.h"
 #include "bat/ads/bundle_state.h"
-#include "bat/ads/notification_info.h"
 #include "bat/ads/client_info.h"
 #include "bat/ads/export.h"
+#include "bat/ads/notification_info.h"
 #include "bat/ads/url_components.h"
-#include "bat/ads/url_session_callback_handler.h"
-#include "bat/ads/url_session.h"
 
 namespace ads {
 
@@ -28,6 +26,17 @@ enum ADS_EXPORT LogLevel {
   INFO
 };
 
+enum ADS_EXPORT URLRequestMethod {
+  GET = 0,
+  PUT = 1,
+  POST = 2
+};
+
+enum ADS_EXPORT Result {
+  SUCCESS,
+  FAILED
+};
+
 using OnSaveCallback = std::function<void(Result)>;
 using OnLoadCallback = std::function<void(Result, const std::string&)>;
 
@@ -35,6 +44,11 @@ using OnResetCallback = std::function<void(Result)>;
 
 using OnGetAdsForCategoryCallback = std::function<void(Result,
   const std::string&, const std::vector<AdInfo>&)>;
+
+using URLRequestCallback = std::function<void (
+  const int, const std::string&,
+  const std::map<std::string, std::string>& headers)>;
+
 
 class ADS_EXPORT AdsClient {
  public:
@@ -89,14 +103,13 @@ class ADS_EXPORT AdsClient {
   // Destroys the specified timer
   virtual void KillTimer(uint32_t timer_id) = 0;
 
-  // Starts a URL session task
-  virtual std::unique_ptr<URLSession> URLSessionTask(
+  virtual void URLRequest(
       const std::string& url,
       const std::vector<std::string>& headers,
       const std::string& content,
       const std::string& content_type,
-      const URLSession::Method& method,
-      URLSessionCallbackHandlerCallback callback) = 0;
+      ads::URLRequestMethod method,
+      ads::URLRequestCallback callback) = 0;
 
   // Saves a value
   virtual void Save(

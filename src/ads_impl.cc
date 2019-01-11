@@ -83,8 +83,6 @@ void AdsImpl::InitializeStep3() {
 
   NotificationAllowedCheck(false);
 
-  RetrieveSSID();
-
   if (IsMobile()) {
     StartDeliveringNotifications(kDeliverNotificationsAfterSeconds);
   }
@@ -298,15 +296,6 @@ void AdsImpl::RemoveAllHistory() {
   client_->RemoveAllHistory();
 
   ConfirmAdUUIDIfAdEnabled();
-}
-
-void AdsImpl::RetrieveSSID() {
-  std::string ssid = ads_client_->GetSSID();
-  if (ssid.empty()) {
-    ssid = kUnknownSSID;
-  }
-
-  client_->SetCurrentSSID(ssid);
 }
 
 void AdsImpl::ConfirmAdUUIDIfAdEnabled() {
@@ -1272,10 +1261,6 @@ void AdsImpl::GenerateAdReportingBackgroundEvent() {
   std::string time_stamp = helper::Time::TimeStamp();
   writer.String(time_stamp.c_str());
 
-  writer.String("place");
-  auto place = client_->GetCurrentPlace();
-  writer.String(place.c_str());
-
   writer.EndObject();
 
   auto json = buffer.GetString();
@@ -1297,10 +1282,6 @@ void AdsImpl::GenerateAdReportingForegroundEvent() {
   writer.String("stamp");
   std::string time_stamp = helper::Time::TimeStamp();
   writer.String(time_stamp.c_str());
-
-  writer.String("place");
-  auto place = client_->GetCurrentPlace();
-  writer.String(place.c_str());
 
   writer.EndObject();
 
@@ -1402,10 +1383,6 @@ void AdsImpl::GenerateAdReportingRestartEvent() {
   std::string time_stamp = helper::Time::TimeStamp();
   writer.String(time_stamp.c_str());
 
-  writer.String("place");
-  auto place = client_->GetCurrentPlace();
-  writer.String(place.c_str());
-
   writer.EndObject();
 
   auto json = buffer.GetString();
@@ -1439,10 +1416,6 @@ void AdsImpl::GenerateAdReportingSettingsEvent() {
   writer.Bool(configured);
 
   writer.EndObject();
-
-  writer.String("place");
-  auto place = client_->GetCurrentPlace();
-  writer.String(place.c_str());
 
   writer.String("locale");
   auto locale = client_->GetLocale();

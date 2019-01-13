@@ -13,8 +13,9 @@
 
 namespace ads {
 
-struct AdInfo;
 struct ClientInfo;
+struct IssuersInfo;
+struct AdInfo;
 struct NotificationInfo;
 struct UrlComponents;
 struct ClientState;
@@ -22,8 +23,9 @@ struct BundleState;
 
 using JsonWriter = rapidjson::Writer<rapidjson::StringBuffer>;
 
-void SaveToJson(JsonWriter* writer, const AdInfo& info);
 void SaveToJson(JsonWriter* writer, const ClientInfo& info);
+void SaveToJson(JsonWriter* writer, const IssuersInfo& info);
+void SaveToJson(JsonWriter* writer, const AdInfo& info);
 void SaveToJson(JsonWriter* writer, const NotificationInfo& info);
 void SaveToJson(JsonWriter* writer, const UrlComponents& components);
 void SaveToJson(JsonWriter* writer, const ClientState& state);

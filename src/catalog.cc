@@ -60,7 +60,7 @@ const std::vector<CampaignInfo>& Catalog::GetCampaigns() const {
   return catalog_state_->campaigns;
 }
 
-const std::vector<IssuerInfo>& Catalog::GetIssuers() const {
+const IssuersInfo& Catalog::GetIssuers() const {
   return catalog_state_->issuers;
 }
 

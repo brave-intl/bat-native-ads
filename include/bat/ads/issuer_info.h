@@ -7,22 +7,14 @@
 
 #include <string>
 
+#include "bat/ads/export.h"
+
 namespace ads {
 
-struct IssuerInfo {
-  IssuerInfo() :
-      name(""),
-      public_key("") {}
-
-  explicit IssuerInfo(const std::string& public_key) :
-      name(""),
-      public_key(public_key) {}
-
-  IssuerInfo(const IssuerInfo& info) :
-      name(info.name),
-      public_key(info.public_key) {}
-
-  ~IssuerInfo() {}
+struct ADS_EXPORT IssuerInfo {
+  IssuerInfo();
+  IssuerInfo(const IssuerInfo& info);
+  ~IssuerInfo();
 
   std::string name;
   std::string public_key;

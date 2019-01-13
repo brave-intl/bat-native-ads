@@ -68,7 +68,7 @@ void TabUpdated(
     const int32_t tab_id,
     const std::string& url,
     const bool is_active,
-    const bool is_incognito);
+    const bool is_incognito)
 ```
 
 `TabClosed` should be called to record when a browser tab is closed
@@ -175,11 +175,6 @@ void LoadUserModelForLocale(
 const std::string GenerateUUID() const
 ```
 
-`GetSSID` should return the network SSID or an empty string if not available
-```
-const std::string GetSSID() const
-```
-
 `IsForeground` should return `true` if the browser is in the foreground otherwise returns `false`
 ```
 bool IsForeground() const
@@ -195,14 +190,19 @@ bool IsNotificationsAvailable() const
 void ShowNotification(std::unique_ptr<NotificationInfo> info)
 ```
 
-`CanShowAd` should return `true` if Confirmations is ready to show the ad otherwise returns `false`
+`SetCatalogIssuers` should notify that the catalog issuers have changed
 ```
-bool CanShowAd(const AdInfo& ad_info)
+  void SetCatalogIssuers(std::unique_ptr<IssuersInfo> info)
+```
+
+`IsConfirmationsReadyToShowAds` should return `true` if Confirmations is ready to show ads otherwise returns `false`
+```
+bool IsConfirmationsReadyToShowAds()
 ```
 
 `AdSustained` should be called to inform Confirmations that an ad was sustained
 ```
-void AdSustained(const AdInfo& ad_info)
+void AdSustained(std::unique_ptr<NotificationInfo> info)
 ```
 
 `SetTimer` should create a timer to trigger after the time offset specified in seconds. If the timer was created successfully a unique identifier should be returned, otherwise returns `0`
@@ -213,12 +213,6 @@ uint32_t SetTimer(const uint64_t time_offset)
 `KillTimer` should destroy the timer associated with the specified timer identifier
 ```
 void KillTimer(uint32_t timer_id)
-```
-
-`OnCatalogIssuersChanged` should notify that the catalog issuers have changed
-```
-  void OnCatalogIssuersChanged(
-      const std::vector<IssuerInfo>& issuers);
 ```
 
 `URLRequest` should start a URL request

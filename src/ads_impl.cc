@@ -556,6 +556,12 @@ void AdsImpl::CheckReadyAdServe(const bool forced) {
   }
 
   if (!forced) {
+    if (!ads_client_->IsConfirmationsReadyToShowAds()) {
+      LOG(INFO) << "Notification not made: Confirmations not ready";
+
+      return;
+    }
+
     if (!IsMobile() && !IsForeground()) {
       // TODO(Terry Mancey): Implement Log (#44)
       // 'Notification not made', { reason: 'not in foreground' }
@@ -735,17 +741,6 @@ bool AdsImpl::ShowAd(
     return false;
   }
 
-  if (!ads_client_->CanShowAd(ad_info)) {
-    LOG(INFO) << "Notification not made: Confirmations not ready"
-        << std::endl << "  advertiser: " << ad_info.advertiser
-        << std::endl << "  notificationText: " << ad_info.notification_text
-        << std::endl << "  notificationUrl: " << ad_info.notification_url
-        << std::endl << "  creativeSetId: " << ad_info.notification_url
-        << std::endl << "  uuid: " << ad_info.notification_url;
-
-    return false;
-  }
-
   auto notification_info = std::make_unique<NotificationInfo>();
   notification_info->advertiser = ad_info.advertiser;
   notification_info->category = category;
@@ -860,7 +855,6 @@ bool AdsImpl::IsCollectingActivity() const {
 
   return true;
 }
-
 
 void AdsImpl::StartDeliveringNotifications(const uint64_t start_timer_in) {
   StopDeliveringNotifications();
@@ -992,6 +986,10 @@ void AdsImpl::SustainAdInteraction() {
   LOG(INFO) << "Sustained ad interaction";
 
   GenerateAdReportingSustainEvent(last_shown_notification_info_);
+
+  auto notification_info =
+      std::make_unique<NotificationInfo>(last_shown_notification_info_);
+  ads_client_->AdSustained(std::move(notification_info));
 }
 
 void AdsImpl::StopSustainingAdInteraction() {
@@ -1193,8 +1191,6 @@ void AdsImpl::GenerateAdReportingSustainEvent(
 
   auto json = buffer.GetString();
   ads_client_->EventLog(json);
-
-  ads_client_->AdSustained(info);
 }
 
 void AdsImpl::GenerateAdReportingLoadEvent(

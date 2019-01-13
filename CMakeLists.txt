@@ -92,6 +92,8 @@ message(STATUS "BAT Native Ads")
 set(SOURCES
   "${PROJECT_SOURCE_DIR}/src/bat/ads/ad_info.cc"
   "${PROJECT_SOURCE_DIR}/src/bat/ads/client_info.cc"
+  "${PROJECT_SOURCE_DIR}/src/bat/ads/issuer_info.cc"
+  "${PROJECT_SOURCE_DIR}/src/bat/ads/issuers_info.cc"
   "${PROJECT_SOURCE_DIR}/src/bat/ads/notification_info.cc"
   "${PROJECT_SOURCE_DIR}/src/bat/ads/url_components.cc"
   "${PROJECT_SOURCE_DIR}/src/ads.cc"

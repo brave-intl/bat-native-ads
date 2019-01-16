@@ -56,7 +56,7 @@ message(STATUS "URI Parser dependency")
 FetchContent_Declare(
   URIParserProject
   GIT_REPOSITORY git@github.com:uriparser/uriparser.git
-  GIT_TAG        master
+  GIT_TAG        uriparser-0.9.0
 )
 
 FetchContent_GetProperties(URIParserProject)

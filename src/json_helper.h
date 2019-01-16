@@ -49,8 +49,8 @@ template <typename T>
 bool LoadFromJson(
     T* t,
     const std::string& json,
-    const std::string& jsonSchema) {
-  return t->FromJson(json, jsonSchema);
+    const std::string& json_schema) {
+  return t->FromJson(json, json_schema);
 }
 
 }  // namespace ads
@@ -60,8 +60,8 @@ namespace helper {
 class JSON {
  public:
   static bool Validate(
-      rapidjson::Document *document,
-      const std::string& jsonSchema);
+      rapidjson::Document* document,
+      const std::string& json_schema);
 };
 
 }  // namespace helper

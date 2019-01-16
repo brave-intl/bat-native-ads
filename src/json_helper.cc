@@ -9,14 +9,14 @@
 namespace helper {
 
 bool JSON::Validate(
-    rapidjson::Document *document,
-    const std::string& jsonSchema) {
+    rapidjson::Document* document,
+    const std::string& json_schema) {
   if (document->HasParseError()) {
     return false;
   }
 
   rapidjson::Document document_schema;
-  document_schema.Parse(jsonSchema.c_str());
+  document_schema.Parse(json_schema.c_str());
 
   if (document_schema.HasParseError()) {
     return false;

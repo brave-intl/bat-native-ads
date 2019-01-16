@@ -33,11 +33,11 @@ const std::string BundleState::ToJson() const {
 
 bool BundleState::FromJson(
     const std::string& json,
-    const std::string& jsonSchema) {
+    const std::string& json_schema) {
   rapidjson::Document bundle;
   bundle.Parse(json.c_str());
 
-  if (!helper::JSON::Validate(&bundle, jsonSchema)) {
+  if (!helper::JSON::Validate(&bundle, json_schema)) {
     return false;
   }
 

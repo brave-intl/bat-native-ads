@@ -20,7 +20,7 @@ struct CatalogState {
   explicit CatalogState(const CatalogState& state);
   ~CatalogState();
 
-  bool FromJson(const std::string& json, const std::string& jsonSchema);
+  bool FromJson(const std::string& json, const std::string& json_schema);
 
   std::string catalog_id;
   uint64_t version;

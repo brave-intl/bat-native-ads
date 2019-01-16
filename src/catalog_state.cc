@@ -27,11 +27,11 @@ CatalogState::~CatalogState() = default;
 
 bool CatalogState::FromJson(
     const std::string& json,
-    const std::string& jsonSchema) {
+    const std::string& json_schema) {
   rapidjson::Document catalog;
   catalog.Parse(json.c_str());
 
-  if (!helper::JSON::Validate(&catalog, jsonSchema)) {
+  if (!helper::JSON::Validate(&catalog, json_schema)) {
     return false;
   }
 

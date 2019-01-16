@@ -19,7 +19,7 @@ struct BundleState {
   ~BundleState();
 
   const std::string ToJson() const;
-  bool FromJson(const std::string& json, const std::string& jsonSchema);
+  bool FromJson(const std::string& json, const std::string& json_schema);
 
   std::string catalog_id;
   uint64_t catalog_version;

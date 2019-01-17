@@ -267,8 +267,7 @@ void Client::OnStateLoaded(const Result result, const std::string& json) {
 
     client_state_.reset(new ClientState());
   } else {
-    auto result = FromJson(json);
-    if (result != SUCCESS) {
+    if (!FromJson(json)) {
       return;
     }
 

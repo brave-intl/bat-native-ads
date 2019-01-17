@@ -122,6 +122,7 @@ std::unique_ptr<BundleState> Bundle::GenerateFromCatalog(
       }
 
       if (heirarchy.empty()) {
+        LOG(ERROR) << "creativeSet segments are empty";
         return nullptr;
       }
 
@@ -160,6 +161,7 @@ std::unique_ptr<BundleState> Bundle::GenerateFromCatalog(
       }
 
       if (entries == 0) {
+        LOG(ERROR) << "creativeSet creatives are empty";
         return nullptr;
       }
     }

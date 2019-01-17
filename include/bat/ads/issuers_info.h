@@ -10,6 +10,7 @@
 
 #include "bat/ads/export.h"
 #include "bat/ads/issuer_info.h"
+#include "bat/ads/result.h"
 
 namespace ads {
 
@@ -19,7 +20,9 @@ struct ADS_EXPORT IssuersInfo {
   ~IssuersInfo();
 
   const std::string ToJson() const;
-  bool FromJson(const std::string& json);
+  Result FromJson(
+      const std::string& json,
+      std::string* error_description = nullptr);
 
   std::string public_key;
   std::vector<IssuerInfo> issuers;

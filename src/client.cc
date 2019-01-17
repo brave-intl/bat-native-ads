@@ -252,7 +252,7 @@ void Client::RemoveAllHistory() {
 ///////////////////////////////////////////////////////////////////////////////
 
 void Client::OnStateSaved(const Result result) {
-  if (result == FAILED) {
+  if (result != SUCCESS) {
     LOG(ERROR) << "Failed to save client state";
 
     return;
@@ -262,14 +262,13 @@ void Client::OnStateSaved(const Result result) {
 }
 
 void Client::OnStateLoaded(const Result result, const std::string& json) {
-  if (result == FAILED) {
+  if (result != SUCCESS) {
     LOG(ERROR) << "Failed to load client state, resetting to default values";
 
     client_state_.reset(new ClientState());
   } else {
-    if (!FromJson(json)) {
-      LOG(ERROR) << "Failed to parse client state: " << json;
-
+    auto result = FromJson(json);
+    if (result != SUCCESS) {
       return;
     }
 
@@ -281,7 +280,12 @@ void Client::OnStateLoaded(const Result result, const std::string& json) {
 
 bool Client::FromJson(const std::string& json) {
   ClientState state;
-  if (!LoadFromJson(&state, json)) {
+  std::string error_description;
+  auto result = LoadFromJson(&state, json, &error_description);
+  if (result != SUCCESS) {
+    LOG(ERROR) << "Failed to parse client JSON (" << error_description <<
+        "): " << json;
+
     return false;
   }
 

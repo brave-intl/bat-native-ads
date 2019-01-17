@@ -10,6 +10,8 @@
 #include <map>
 #include <deque>
 
+#include "bat/ads/result.h"
+
 namespace ads {
 
 struct ClientState {
@@ -18,7 +20,9 @@ struct ClientState {
   ~ClientState();
 
   const std::string ToJson();
-  bool FromJson(const std::string& json);
+  Result FromJson(
+      const std::string& json,
+      std::string* error_description = nullptr);
 
   std::deque<uint64_t> ads_shown_history;
   std::string ad_uuid;

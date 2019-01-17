@@ -390,17 +390,19 @@ void MockAdsClient::LoadBundleState() {
 void MockAdsClient::OnBundleStateLoaded(
     const Result result,
     const std::string& json) {
-  if (result == FAILED) {
+  if (result != SUCCESS) {
     LOG(LOG_ERROR) << "Failed to load bundle: " << json;
 
     return;
   }
 
-  auto json_schema = LoadJsonSchema(_bundle_schema_name);
-
   BundleState state;
-  if (!state.FromJson(json, json_schema)) {
-    LOG(LOG_ERROR) << "Failed to parse bundle: " << json;
+  auto json_schema = LoadJsonSchema(_bundle_schema_name);
+  std::string error_description;
+  auto result = state.FromJson(json, json_schema, &error_description);
+  if (result != SUCCESS) {
+    LOG(LOG_ERROR) << "Failed to parse bundle (" << error_description
+        << "): " << json;
 
     return;
   }
@@ -424,17 +426,19 @@ void MockAdsClient::LoadSampleBundleState() {
 void MockAdsClient::OnSampleBundleStateLoaded(
     const Result result,
     const std::string& json) {
-  if (result == FAILED) {
+  if (result != SUCCESS) {
     LOG(LOG_ERROR) << "Failed to load sample bundle";
 
     return;
   }
 
-  auto json_schema = LoadJsonSchema(_bundle_schema_name);
-
   BundleState state;
-  if (!state.FromJson(json, json_schema)) {
-    LOG(LOG_ERROR) << "Failed to parse sample bundle: " << json;
+  auto json_schema = LoadJsonSchema(_bundle_schema_name);
+  std::string error_description;
+  auto result = state.FromJson(json, json_schema, &error_description);
+  if (result != SUCCESS) {
+    LOG(LOG_ERROR) << "Failed to parse sample bundle (" << error_description
+        << "): " << json;
 
     return;
   }

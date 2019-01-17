@@ -9,6 +9,7 @@
 
 #include "bat/ads/export.h"
 #include "bat/ads/client_info_platform_type.h"
+#include "bat/ads/result.h"
 
 namespace ads {
 
@@ -18,7 +19,9 @@ struct ADS_EXPORT ClientInfo {
   ~ClientInfo();
 
   const std::string ToJson() const;
-  bool FromJson(const std::string& json);
+  Result FromJson(
+      const std::string& json,
+      std::string* error_description = nullptr);
 
   const std::string GetPlatformName() const;
 

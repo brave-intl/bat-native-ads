@@ -107,6 +107,7 @@ set(SOURCES
   "${PROJECT_SOURCE_DIR}/src/client_state.cc"
   "${PROJECT_SOURCE_DIR}/src/json_helper.cc"
   "${PROJECT_SOURCE_DIR}/src/math_helper.cc"
+  "${PROJECT_SOURCE_DIR}/src/error_helper.cc"
   "${PROJECT_SOURCE_DIR}/src/locale_helper.cc"
   "${PROJECT_SOURCE_DIR}/src/search_providers.cc"
   "${PROJECT_SOURCE_DIR}/src/string_helper.cc"

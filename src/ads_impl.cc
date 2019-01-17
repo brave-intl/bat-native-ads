@@ -137,7 +137,7 @@ void AdsImpl::LoadUserModel() {
 }
 
 void AdsImpl::OnUserModelLoaded(const Result result, const std::string& json) {
-  if (result == FAILED) {
+  if (result != SUCCESS) {
     LOG(ERROR) << "Failed to load user model";
 
     return;
@@ -474,7 +474,7 @@ void AdsImpl::ServeSampleAd() {
 void AdsImpl::OnLoadSampleBundle(
     const Result result,
     const std::string& json) {
-  if (result == FAILED) {
+  if (result != SUCCESS) {
     LOG(ERROR) << "Failed to load sample bundle";
 
     return;
@@ -482,10 +482,13 @@ void AdsImpl::OnLoadSampleBundle(
 
   LOG(INFO) << "Successfully loaded sample bundle";
 
-  BundleState sample_bundle_state;
-  if (!sample_bundle_state.FromJson(json,
-      ads_client_->LoadJsonSchema(_bundle_schema_name))) {
-    LOG(ERROR) << "Failed to parse sample bundle: " << json;
+  BundleState state;
+  std::string error_description;
+  std::string json_schema = ads_client_->LoadJsonSchema(_bundle_schema_name);
+  auto json_result = state.FromJson(json, json_schema, &error_description);
+  if (json_result != SUCCESS) {
+    LOG(ERROR) << "Failed to parse sample bundle (" << error_description
+        << "): " << json;
 
     return;
   }
@@ -496,8 +499,8 @@ void AdsImpl::OnLoadSampleBundle(
   // the below code should be abstracted into GetAdForSampleCategory once the
   // necessary changes have been made in Brave Core by Brian Johnson
 
-  auto categories = sample_bundle_state.categories.begin();
-  auto categories_count = sample_bundle_state.categories.size();
+  auto categories = state.categories.begin();
+  auto categories_count = state.categories.size();
   if (categories_count == 0) {
     // TODO(Terry Mancey): Implement Log (#44)
     // 'Notification not made', { reason: 'no categories' }
@@ -631,7 +634,7 @@ void AdsImpl::OnGetAds(
     const std::string& region,
     const std::string& category,
     const std::vector<AdInfo>& ads) {
-  if (result == FAILED) {
+  if (result != SUCCESS) {
     auto pos = category.find_last_of('-');
     if (pos != std::string::npos) {
       std::string new_category = category.substr(0, pos);
@@ -1016,6 +1019,8 @@ bool AdsImpl::IsSustainingAdInteraction() const {
 }
 
 bool AdsImpl::IsStillViewingAd() const {
+  std::string error_description;
+
   UrlComponents last_shown_notification_info_url_components;
   if (!ads_client_->GetUrlComponents(last_shown_notification_info_.url,
       &last_shown_notification_info_url_components)) {
@@ -1030,6 +1035,10 @@ bool AdsImpl::IsStillViewingAd() const {
 
   if (last_shown_notification_info_url_components.hostname
       != last_shown_tab_url_components.hostname) {
+    LOG(INFO) << "IsStillViewingAd last_shown_notification_info_url: "
+        << last_shown_notification_info_url_components.hostname
+        << " does not match last_shown_tab_url:"
+        << last_shown_tab_url_components.hostname;
     return false;
   }
 

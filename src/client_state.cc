@@ -59,12 +59,18 @@ const std::string ClientState::ToJson() {
   return json;
 }
 
-bool ClientState::FromJson(const std::string& json) {
+Result ClientState::FromJson(
+    const std::string& json,
+    std::string* error_description) {
   rapidjson::Document client;
   client.Parse(json.c_str());
 
   if (client.HasParseError()) {
-    return false;
+    if (error_description) {
+      *error_description = helper::JSON::GetLastError(&client);
+    }
+
+    return FAILED;
   }
 
   if (client.HasMember("adsShownHistory")) {
@@ -179,7 +185,7 @@ bool ClientState::FromJson(const std::string& json) {
     shop_url = client["shopUrl"].GetString();
   }
 
-  return true;
+  return SUCCESS;
 }
 
 void SaveToJson(JsonWriter* writer, const ClientState& state) {

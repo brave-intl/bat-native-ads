@@ -181,7 +181,7 @@ void Bundle::OnStateSaved(
     const uint64_t& catalog_ping,
     const uint64_t& catalog_last_updated_timestamp,
     const Result result) {
-  if (result == FAILED) {
+  if (result != SUCCESS) {
     LOG(ERROR) << "Failed to save bundle state";
 
     // If the bundle fails to save, we will retry the next time a bundle is
@@ -203,7 +203,7 @@ void Bundle::OnStateReset(
     const uint64_t& catalog_ping,
     const uint64_t& catalog_last_updated_timestamp,
     const Result result) {
-  if (result == FAILED) {
+  if (result != SUCCESS) {
     LOG(ERROR) << "Failed to reset bundle state";
 
     return;

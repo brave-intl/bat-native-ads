@@ -5,11 +5,14 @@
 #ifndef BAT_ADS_JSON_HELPER_H_
 #define BAT_ADS_JSON_HELPER_H_
 
+#include <string>
+
 #include "rapidjson/document.h"
 #include "rapidjson/error/en.h"
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/writer.h"
 #include "rapidjson/schema.h"
+#include "bat/ads/result.h"
 
 namespace ads {
 
@@ -41,16 +44,20 @@ void SaveToJson(const T& t, std::string* json) {
 }
 
 template <typename T>
-bool LoadFromJson(T* t, const std::string& json) {
+Result LoadFromJson(
+    T* t,
+    const std::string& json,
+    std::string* error_description) {
   return t->FromJson(json);
 }
 
 template <typename T>
-bool LoadFromJson(
+Result LoadFromJson(
     T* t,
     const std::string& json,
-    const std::string& json_schema) {
-  return t->FromJson(json, json_schema);
+    const std::string& json_schema,
+    std::string* error_description) {
+  return t->FromJson(json, json_schema, error_description);
 }
 
 }  // namespace ads
@@ -59,9 +66,11 @@ namespace helper {
 
 class JSON {
  public:
-  static bool Validate(
+  static const ads::Result Validate(
       rapidjson::Document* document,
       const std::string& json_schema);
+
+  static const std::string GetLastError(rapidjson::Document* document);
 };
 
 }  // namespace helper

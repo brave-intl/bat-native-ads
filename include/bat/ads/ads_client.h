@@ -20,6 +20,7 @@
 #include "bat/ads/export.h"
 #include "bat/ads/notification_info.h"
 #include "bat/ads/url_components.h"
+#include "bat/ads/result.h"
 
 namespace ads {
 
@@ -33,11 +34,6 @@ enum ADS_EXPORT URLRequestMethod {
   GET = 0,
   PUT = 1,
   POST = 2
-};
-
-enum ADS_EXPORT Result {
-  SUCCESS,
-  FAILED
 };
 
 class ADS_EXPORT LogStream {

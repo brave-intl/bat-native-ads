@@ -24,24 +24,38 @@ const std::string IssuersInfo::ToJson() const {
   return json;
 }
 
-bool IssuersInfo::FromJson(const std::string& json) {
+Result IssuersInfo::FromJson(
+    const std::string& json,
+    std::string* error_description) {
   rapidjson::Document document;
   document.Parse(json.c_str());
 
   if (document.HasParseError()) {
-    return false;
+    if (error_description) {
+      *error_description = helper::JSON::GetLastError(&document);
+    }
+
+    return FAILED;
   }
 
   // Public key
   if (!document.HasMember("public_key")) {
-    return false;
+    if (error_description != nullptr) {
+      *error_description = "Catalog issuers public key is missing";
+    }
+
+    return FAILED;
   }
 
   public_key = document["public_key"].GetString();
 
   // Issuers
   if (!document.HasMember("issuers")) {
-    return false;
+    if (error_description != nullptr) {
+      *error_description = "No catalog issuers";
+    }
+
+    return FAILED;
   }
 
   std::vector<IssuerInfo> issuers = {};
@@ -53,7 +67,7 @@ bool IssuersInfo::FromJson(const std::string& json) {
     issuers.push_back(info);
   }
 
-  return true;
+  return SUCCESS;
 }
 
 void SaveToJson(JsonWriter* writer, const IssuersInfo& info) {

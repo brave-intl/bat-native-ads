@@ -1019,8 +1019,6 @@ bool AdsImpl::IsSustainingAdInteraction() const {
 }
 
 bool AdsImpl::IsStillViewingAd() const {
-  std::string error_description;
-
   UrlComponents last_shown_notification_info_url_components;
   if (!ads_client_->GetUrlComponents(last_shown_notification_info_.url,
       &last_shown_notification_info_url_components)) {

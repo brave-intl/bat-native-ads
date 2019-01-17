@@ -40,7 +40,7 @@ Result IssuersInfo::FromJson(
 
   // Public key
   if (!document.HasMember("public_key")) {
-    if (error_description != nullptr) {
+    if (error_description) {
       *error_description = "Catalog issuers public key is missing";
     }
 
@@ -51,7 +51,7 @@ Result IssuersInfo::FromJson(
 
   // Issuers
   if (!document.HasMember("issuers")) {
-    if (error_description != nullptr) {
+    if (error_description) {
       *error_description = "No catalog issuers";
     }
 

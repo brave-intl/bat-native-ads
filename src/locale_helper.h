@@ -5,6 +5,8 @@
 #ifndef BAT_ADS_LOCALE_HELPER_H_
 #define BAT_ADS_LOCALE_HELPER_H_
 
+#include <string>
+
 namespace helper {
 
 class Locale {

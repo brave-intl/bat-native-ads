@@ -20,6 +20,7 @@ ClientState::ClientState() :
     last_user_idle_stop_time(0),
     locale(kDefaultLanguageCode),
     locales({}),
+    last_page_classification(""),
     page_score_history({}),
     creative_set_history({}),
     campaign_history({}),
@@ -40,6 +41,7 @@ ClientState::ClientState(const ClientState& state) :
   last_user_idle_stop_time(state.last_user_idle_stop_time),
   locale(state.locale),
   locales(state.locales),
+  last_page_classification(state.last_page_classification),
   page_score_history(state.page_score_history),
   creative_set_history(state.creative_set_history),
   campaign_history(state.campaign_history),
@@ -112,8 +114,13 @@ bool ClientState::FromJson(const std::string& json) {
     }
   }
 
+  if (client.HasMember("last_page_classification")) {
+    last_page_classification = client["last_page_classification"].GetString();
+  }
+
   if (client.HasMember("pageScoreHistory")) {
-    for (const auto& history : client["pageScoreHistory"].GetArray()) {
+    for (const auto& history :
+        client["pageScoreHistory"].GetArray()) {
       std::vector<double> page_scores = {};
 
       for (const auto& page_score : history.GetArray()) {
@@ -221,12 +228,15 @@ void SaveToJson(JsonWriter* writer, const ClientState& state) {
   }
   writer->EndArray();
 
+  writer->String("last_page_classification");
+  writer->String(state.last_page_classification.c_str());
+
   writer->String("pageScoreHistory");
   writer->StartArray();
-  for (const auto& history : state.page_score_history) {
+  for (const auto& page_score : state.page_score_history) {
     writer->StartArray();
-    for (const auto& pageScore : history) {
-      writer->Double(pageScore);
+    for (const auto& score : page_score) {
+      writer->Double(score);
     }
     writer->EndArray();
   }

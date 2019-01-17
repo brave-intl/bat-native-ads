@@ -32,7 +32,6 @@ AdsImpl::AdsImpl(AdsClient* ads_client) :
     is_foreground_(false),
     media_playing_({}),
     last_shown_tab_url_(""),
-    last_page_classification_(""),
     page_score_cache_({}),
     last_shown_notification_info_(NotificationInfo()),
     collect_activity_timer_id_(0),
@@ -114,7 +113,6 @@ void AdsImpl::Deinitialize() {
 
   last_shown_notification_info_ = NotificationInfo();
 
-  last_page_classification_ = "";
   page_score_cache_.clear();
 
   is_first_run_ = true;
@@ -369,7 +367,7 @@ void AdsImpl::ClassifyPage(const std::string& url, const std::string& html) {
     return;
   }
 
-  last_page_classification_ = winning_category;
+  client_->SetLastPageClassification(winning_category);
 
   client_->AppendPageScoreToPageScoreHistory(page_score);
 
@@ -379,7 +377,7 @@ void AdsImpl::ClassifyPage(const std::string& url, const std::string& html) {
   auto winner_over_time_category = GetWinnerOverTimeCategory();
 
   LOG(INFO) << "Site visited " << url << ", immediateWinner is "
-      << last_page_classification_ << " and winnerOverTime is "
+      << winning_category << " and winnerOverTime is "
       << winner_over_time_category;
 }
 
@@ -391,9 +389,9 @@ std::string AdsImpl::GetWinnerOverTimeCategory() {
 
   uint64_t count = page_score_history.front().size();
 
-  std::vector<double> winner_over_time_page_scores(count);
-  std::fill(winner_over_time_page_scores.begin(),
-      winner_over_time_page_scores.end(), 0);
+  std::vector<double> winner_over_time_page_score(count);
+  std::fill(winner_over_time_page_score.begin(),
+      winner_over_time_page_score.end(), 0);
 
   for (const auto& page_score : page_score_history) {
     if (page_score.size() != count) {
@@ -401,15 +399,21 @@ std::string AdsImpl::GetWinnerOverTimeCategory() {
     }
 
     for (size_t i = 0; i < page_score.size(); i++) {
-      winner_over_time_page_scores[i] += page_score[i];
+      winner_over_time_page_score[i] += page_score[i];
     }
   }
 
-  return GetWinningCategory(winner_over_time_page_scores);
+  return GetWinningCategory(winner_over_time_page_score);
 }
 
-std::string AdsImpl::GetWinningCategory(const std::vector<double>& page_score) {
+std::string AdsImpl::GetWinningCategory(
+    const std::vector<double>& page_score) {
   return user_model_->WinningCategory(page_score);
+}
+
+std::string AdsImpl::GetWinningCategory(const std::string& html) {
+  auto page_score = user_model_->ClassifyPage(html);
+  return GetWinningCategory(page_score);
 }
 
 void AdsImpl::CachePageScore(
@@ -1070,7 +1074,7 @@ void AdsImpl::GenerateAdReportingNotificationShownEvent(
 
   writer.String("notificationClassification");
   writer.StartArray();
-  std::vector<std::string> classifications;
+  std::vector<std::string> classifications = {};
   helper::String::Split(info.category, '-', &classifications);
   for (const auto& classification : classifications) {
     writer.String(classification.c_str());
@@ -1141,7 +1145,7 @@ void AdsImpl::GenerateAdReportingNotificationResultEvent(
 
   writer.String("notificationClassification");
   writer.StartArray();
-  std::vector<std::string> classifications;
+  std::vector<std::string> classifications = {};
   helper::String::Split(info.category, '-', &classifications);
   for (const auto& classification : classifications) {
     writer.String(classification.c_str());
@@ -1229,8 +1233,9 @@ void AdsImpl::GenerateAdReportingLoadEvent(
 
   writer.String("tabClassification");
   writer.StartArray();
-  std::vector<std::string> classifications;
-  helper::String::Split(last_page_classification_, '-', &classifications);
+  std::vector<std::string> classifications = {};
+  auto last_page_classification = client_->GetLastPageClassification();
+  helper::String::Split(last_page_classification, '-', &classifications);
   for (const auto& classification : classifications) {
     writer.String(classification.c_str());
   }

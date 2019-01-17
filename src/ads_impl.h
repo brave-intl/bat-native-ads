@@ -77,9 +77,9 @@ class AdsImpl : public Ads {
   void ChangeLocale(const std::string& locale) override;
 
   void ClassifyPage(const std::string& url, const std::string& html) override;
-  std::string last_page_classification_;
   std::string GetWinnerOverTimeCategory();
   std::string GetWinningCategory(const std::vector<double>& page_score);
+  std::string GetWinningCategory(const std::string& html);
 
   std::map<std::string, std::vector<double>> page_score_cache_;
   void CachePageScore(

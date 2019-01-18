@@ -345,26 +345,27 @@ void AdsImpl::ChangeLocale(const std::string& locale) {
 
 void AdsImpl::ClassifyPage(const std::string& url, const std::string& html) {
   if (!IsInitialized()) {
-    LOG(INFO) << "Site visited " << url
-              << ", not initialized";
+    LOG(INFO) << "Site visited " << url << ", not initialized";
+
     return;
   }
 
   if (IsUrlFromLastShownNotification(url)) {
     LOG(INFO) << "Site visited " << url
-              << ", URL is from last shown notification";
+        << ", URL is from last shown notification";
+
     return;
   }
 
   if (!IsValidScheme(url)) {
-    LOG(INFO) << "Site visited " << url
-              << ", invalid URL scheme";
+    LOG(INFO) << "Site visited " << url << ", invalid URL scheme";
+
     return;
   }
 
   if (TestSearchState(url)) {
-    LOG(INFO) << "Site visited " << url
-              << ", testing search state";
+    LOG(INFO) << "Site visited " << url << ", testing search state";
+
     return;
   }
 

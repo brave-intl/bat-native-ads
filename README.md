@@ -20,6 +20,12 @@ bundle-schema.json
 
 `catalog-schema.json` and `bundle-schema.json` are JSON Schemas which specify the JSON-based format to define the structure of the JSON data for validation, documentation, and interaction control. It provides the contract for the JSON data and how that data can be modified.
 
+## Build
+
+    mkdir -p build && cd build
+    cmake ..
+    make
+
 ## API
 
 ### Native

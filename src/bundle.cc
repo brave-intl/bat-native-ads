@@ -109,27 +109,27 @@ std::unique_ptr<BundleState> Bundle::GenerateFromCatalog(
     // Creative Sets
     for (const auto& creative_set : campaign.creative_sets) {
       // Segments
-      std::vector<std::string> heirarchy = {};
+      std::vector<std::string> hierarchy = {};
       for (const auto& segment : creative_set.segments) {
         auto name = helper::String::ToLower(segment.name);
 
-        if (std::find(heirarchy.begin(), heirarchy.end(), name)
-            != heirarchy.end()) {
+        if (std::find(hierarchy.begin(), hierarchy.end(), name)
+            != hierarchy.end()) {
           continue;
         }
 
-        heirarchy.push_back(name);
+        hierarchy.push_back(name);
       }
 
-      if (heirarchy.empty()) {
+      if (hierarchy.empty()) {
         LOG(ERROR) << "creativeSet segments are empty";
         return nullptr;
       }
 
       std::string category;
-      helper::String::Join(heirarchy, '-', &category);
+      helper::String::Join(hierarchy, '-', &category);
 
-      auto top_level = heirarchy.front();
+      auto top_level = hierarchy.front();
       uint64_t entries = 0;
 
       for (const auto& creative : creative_set.creatives) {

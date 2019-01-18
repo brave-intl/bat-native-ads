@@ -62,6 +62,7 @@ class AdsImpl : public Ads {
   void OnMediaStopped(const int32_t tab_id) override;
   bool IsMediaPlaying() const;
 
+  int32_t last_shown_tab_id_;
   std::string last_shown_tab_url_;
   void TabUpdated(
       const int32_t tab_id,
@@ -75,6 +76,7 @@ class AdsImpl : public Ads {
   void ConfirmAdUUIDIfAdEnabled();
 
   void ChangeLocale(const std::string& locale) override;
+  std::string GetRegion();
 
   void ClassifyPage(const std::string& url, const std::string& html) override;
   std::string GetWinnerOverTimeCategory();

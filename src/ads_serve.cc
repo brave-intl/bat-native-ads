@@ -130,8 +130,6 @@ bool AdsServe::ProcessCatalog(const std::string& json) {
   LOG(INFO) << "Parsing catalog";
 
   if (!catalog.FromJson(json)) {
-    LOG(ERROR) << "Failed to parse catalog";
-
     return false;
   }
 

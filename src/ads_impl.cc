@@ -1134,6 +1134,8 @@ void AdsImpl::GenerateAdReportingNotificationShownEvent(
 
   writer.EndObject();
 
+  writer.EndObject();
+
   auto json = buffer.GetString();
   ads_client_->EventLog(json);
 }
@@ -1205,6 +1207,8 @@ void AdsImpl::GenerateAdReportingNotificationResultEvent(
 
   writer.EndObject();
 
+  writer.EndObject();
+
   auto json = buffer.GetString();
   ads_client_->EventLog(json);
 }
@@ -1231,6 +1235,8 @@ void AdsImpl::GenerateAdReportingSustainEvent(
 
   writer.String("notificationType");
   writer.String("viewed");
+
+  writer.EndObject();
 
   writer.EndObject();
 
@@ -1293,6 +1299,8 @@ void AdsImpl::GenerateAdReportingLoadEvent(
 
   writer.EndObject();
 
+  writer.EndObject();
+
   auto json = buffer.GetString();
   ads_client_->EventLog(json);
 
@@ -1317,6 +1325,8 @@ void AdsImpl::GenerateAdReportingBackgroundEvent() {
 
   writer.EndObject();
 
+  writer.EndObject();
+
   auto json = buffer.GetString();
   ads_client_->EventLog(json);
 }
@@ -1336,6 +1346,8 @@ void AdsImpl::GenerateAdReportingForegroundEvent() {
   writer.String("stamp");
   std::string time_stamp = helper::Time::TimeStamp();
   writer.String(time_stamp.c_str());
+
+  writer.EndObject();
 
   writer.EndObject();
 
@@ -1365,6 +1377,8 @@ void AdsImpl::GenerateAdReportingBlurEvent(
 
   writer.EndObject();
 
+  writer.EndObject();
+
   auto json = buffer.GetString();
   ads_client_->EventLog(json);
 }
@@ -1388,6 +1402,8 @@ void AdsImpl::GenerateAdReportingDestroyEvent(
 
   writer.String("tabId");
   writer.Int(info.tab_id);
+
+  writer.EndObject();
 
   writer.EndObject();
 
@@ -1417,6 +1433,8 @@ void AdsImpl::GenerateAdReportingFocusEvent(
 
   writer.EndObject();
 
+  writer.EndObject();
+
   auto json = buffer.GetString();
   ads_client_->EventLog(json);
 }
@@ -1436,6 +1454,8 @@ void AdsImpl::GenerateAdReportingRestartEvent() {
   writer.String("stamp");
   std::string time_stamp = helper::Time::TimeStamp();
   writer.String(time_stamp.c_str());
+
+  writer.EndObject();
 
   writer.EndObject();
 
@@ -1487,6 +1507,8 @@ void AdsImpl::GenerateAdReportingSettingsEvent() {
   writer.String("adsPerHour");
   auto ads_per_hour = ads_client_->GetAdsPerHour();
   writer.Uint64(ads_per_hour);
+
+  writer.EndObject();
 
   writer.EndObject();
 

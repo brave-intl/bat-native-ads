@@ -8,7 +8,7 @@
 
 namespace helper {
 
-const ads::Result JSON::Validate(
+ads::Result JSON::Validate(
     rapidjson::Document* document,
     const std::string& json_schema) {
   if (!document) {
@@ -35,7 +35,7 @@ const ads::Result JSON::Validate(
   return ads::Result::SUCCESS;
 }
 
-const std::string JSON::GetLastError(rapidjson::Document* document) {
+std::string JSON::GetLastError(rapidjson::Document* document) {
   if (!document) {
     return "Invalid document";
   }

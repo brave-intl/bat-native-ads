@@ -48,7 +48,7 @@ Result LoadFromJson(
     T* t,
     const std::string& json,
     std::string* error_description) {
-  return t->FromJson(json);
+  return t->FromJson(json, error_description);
 }
 
 template <typename T>
@@ -66,11 +66,11 @@ namespace helper {
 
 class JSON {
  public:
-  static const ads::Result Validate(
+  static ads::Result Validate(
       rapidjson::Document* document,
       const std::string& json_schema);
 
-  static const std::string GetLastError(rapidjson::Document* document);
+  static std::string GetLastError(rapidjson::Document* document);
 };
 
 }  // namespace helper

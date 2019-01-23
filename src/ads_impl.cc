@@ -1020,7 +1020,7 @@ void AdsImpl::StartSustainingAdInteraction(const uint64_t start_timer_in) {
       << start_timer_in << " seconds";
 }
 
-void AdsImpl::SustainAdInteraction() {
+void AdsImpl::SustainAdInteractionIfNeeded() {
   if (!IsStillViewingAd()) {
     LOG(INFO) << "Failed to Sustain ad interaction";
     return;
@@ -1028,6 +1028,10 @@ void AdsImpl::SustainAdInteraction() {
 
   LOG(INFO) << "Sustained ad interaction";
 
+  SustainAdInteraction();
+}
+
+void AdsImpl::SustainAdInteraction() {
   GenerateAdReportingSustainEvent(last_shown_notification_info_);
 
   auto notification_info =
@@ -1093,7 +1097,7 @@ void AdsImpl::OnTimer(const uint32_t timer_id) {
   } else if (timer_id == delivering_notifications_timer_id_) {
     DeliverNotification();
   } else if (timer_id == sustained_ad_interaction_timer_id_) {
-    SustainAdInteraction();
+    SustainAdInteractionIfNeeded();
   } else {
     LOG(WARNING) << "Unexpected OnTimer: " << std::to_string(timer_id);
   }
@@ -1148,6 +1152,8 @@ void AdsImpl::GenerateAdReportingNotificationShownEvent(
 
   writer.EndObject();
 
+  SustainAdInteraction();
+
   auto json = buffer.GetString();
   ads_client_->EventLog(json);
 }
@@ -1181,8 +1187,6 @@ void AdsImpl::GenerateAdReportingNotificationResultEvent(
     case CLICKED: {
       writer.String("clicked");
       client_->UpdateAdsUUIDSeen(info.uuid, 1);
-
-      StartSustainingAdInteraction(kSustainAdInteractionAfterSeconds);
       break;
     }
 
